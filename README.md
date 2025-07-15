@@ -1,255 +1,155 @@
-🚀 k6 GraphQL Load Testing Framework
-A robust and enterprise-grade load testing framework for GraphQL APIs, powered by k6. This framework is meticulously designed for scalability, portability, and seamless integration with modern DevOps ecosystems. It supports Dockerized workflows, AWS cloud deployments, CI/CD automation, real-time Microsoft Teams notifications, and advanced reporting for comprehensive performance insights.
+# k6 GraphQL Load Testing Framework
 
-🌟 Key Features
+This repository provides a **comprehensive, end-to-end load testing framework** tailored for GraphQL APIs, built on the powerful [k6](https://k6.io/) load testing tool. It's engineered for seamless integration, offering a **Dockerized** setup, **AWS deployment readiness**, **CI/CD pipeline integration**, and **Microsoft Teams notifications** for test results.
 
-Flexible Load Testing: Simulate real-world traffic with customizable scenarios for GraphQL queries and mutations.
-Advanced Reporting: Generate rich HTML reports featuring interactive pie charts, trend graphs, and detailed error breakdowns.
-Containerized Execution: Run tests in a consistent, portable Docker environment for reproducible results.
-Cloud-Native: Deploy effortlessly on AWS EC2, ECS, or other cloud platforms with auto-scaling support.
-CI/CD Integration: Automate testing with GitHub Actions, GitLab CI, or Jenkins for streamlined workflows.
-Real-Time Notifications: Send test results and alerts to Microsoft Teams or Slack via webhooks.
-Highly Configurable: Use environment variables to tailor test parameters without code changes.
-Modular Architecture: Organized folder structure for easy maintenance, extensibility, and collaboration.
-Threshold-Based Monitoring: Define performance thresholds to automatically flag failing tests.
-Multi-Protocol Support: Extendable to test REST APIs or WebSocket endpoints alongside GraphQL.
+-----
 
+## 🚀 Features
 
-📂 Project Structure
+  * **Customizable Load Tests:** Easily configure and run load tests for your GraphQL endpoints with various scenarios.
+  * **Rich HTML Reports:** Generate detailed HTML reports featuring intuitive pie charts, comprehensive metrics, and pass/fail breakdowns for clear insights.
+  * **Dockerized Execution:** Achieve consistent and portable test runs across different environments using Docker.
+  * **Cloud Deployment Ready:** Effortlessly deploy and execute tests on **AWS EC2** or other cloud infrastructure.
+  * **CI/CD Integration:** Integrate seamlessly with **GitHub Actions** (adaptable to other platforms) to automate your load testing workflow.
+  * **Real-time Notifications:** Receive instant test completion notifications directly in your **Microsoft Teams** channel via webhooks.
+  * **Flexible Configuration:** Customize test parameters with ease using environment variables.
+  * **Maintainable Structure:** A well-organized folder structure ensures easy maintenance and extensibility.
+
+-----
+
+## 📂 Folder Structure
+
+```
 k6-graphql-loadtesting-framework/
-├── tests/                        # k6 test scripts
-│   ├── customer_mutation.js      # Example GraphQL mutation test
-│   ├── get_customer.js           # Example GraphQL query test
-│   └── stress_test.js            # Example stress test for peak load
-├── utils/                        # Utility scripts and helpers
-│   ├── html-summary.js           # Custom HTML report generator
-│   ├── logger.js                 # Logging utility for test runs
-│   └── graphql-client.js         # Reusable GraphQL request helper
-├── docker/                       # Docker configuration
-│   ├── Dockerfile                # Docker image for k6 runtime
-│   └── entrypoint.sh             # Entry script for test execution and notifications
-├── reports/                      # Output directory for HTML reports
-├── scripts/                      # Automation scripts
-│   └── deploy_aws.sh             # Script for AWS EC2 deployment
-├── .github/workflows/            # CI/CD pipeline configuration
-│   └── ci-cd-pipeline.yml        # GitHub Actions workflow
-├── .gitignore                    # Git ignore patterns
-├── LICENSE                       # MIT License
-└── README.md                     # Project documentation
+├── tests/
+│   ├── customer_mutation.js         # Sample GraphQL mutation test
+│   ├── get_customer.js              # Sample GraphQL query test
+├── utils/
+│   └── html-summary.js              # HTML report generator
+├── docker/
+│   ├── Dockerfile                   # Docker image definition
+│   └── entrypoint.sh                # Script to run tests and send notifications
+├── reports/                         # Generated HTML reports saved here
+├── .github/
+│   └── workflows/
+│       └── ci-cd-pipeline.yml       # GitHub Actions workflow for CI/CD
+├── README.md
+├── .gitignore
+└── LICENSE
+```
 
+-----
 
-🛠️ Prerequisites
+## 🐳 Docker Setup
 
-Docker (for containerized execution)
-k6 (for local development)
-Node.js (optional, for report generation utilities)
-AWS CLI (optional, for cloud deployments)
-Microsoft Teams webhook URL (for notifications)
+Get started quickly by building and running your tests in Docker.
 
+### Build the Docker Image
 
-🐳 Docker Setup
-Build the Docker Image
-docker build -t k6-graphql-loadtest ./docker
+```bash
+docker build -t k6-loadtest ./docker
+```
 
-Run Tests in Docker
+### Run Tests in Docker
+
+Adjust the environment variables as needed for your specific test scenario.
+
+```bash
 docker run --rm \
   -e GRAPHQL_ENDPOINT=https://store.fur4.com/graphql \
-  -e MAX_VUS=50 \
-  -e TEST_DURATION=60s \
+  -e MAX_VUS=10 \
+  -e TEST_DURATION=30s \
   -e TEAMS_WEBHOOK_URL="https://your-teams-webhook-url" \
-  -e SLACK_WEBHOOK_URL="https://your-slack-webhook-url" \
-  -e THRESHOLD_RPS=100 \
   -v $(pwd)/reports:/app/reports \
-  k6-graphql-loadtest
+  k6-loadtest
+```
 
+  * **Reports:** HTML reports will be saved to the `reports/` folder on your host machine.
+  * **Notifications:** If `TEAMS_WEBHOOK_URL` is configured, a test completion notification will be sent to your Microsoft Teams channel.
 
-Output: HTML reports are saved to the reports/ folder on the host machine.
-Notifications: If TEAMS_WEBHOOK_URL or SLACK_WEBHOOK_URL is set, test results are sent to the respective platforms.
-Thresholds: Set THRESHOLD_RPS to define requests-per-second thresholds for pass/fail criteria.
+-----
 
+## ☁️ Running on AWS EC2
 
-☁️ Cloud Deployment (AWS EC2)
-Steps
+Deploying your load tests to AWS EC2 is straightforward:
 
-Launch an EC2 instance (Amazon Linux 2 or Ubuntu) with Docker installed.
-Clone this repository:git clone https://github.com/your-repo/k6-graphql-loadtesting-framework.git
-cd k6-graphql-loadtesting-framework
+1.  **Launch EC2 Instance:** Provision an EC2 instance with Docker installed (Amazon Linux 2 or Ubuntu are recommended).
+2.  **Clone Repository:** Clone this repository onto your EC2 instance.
+3.  **Build and Run:** Follow the Docker setup steps above to build and run the container.
+4.  **(Optional) Schedule Runs:** Set up a cron job or systemd timer to automate recurring test runs.
+5.  **Share Reports:** Serve the generated reports via a web server or upload them to AWS S3 for easy sharing.
 
+-----
 
-Build and run the Docker container (see Docker Setup).
-(Optional) Automate test execution:
-Use scripts/deploy_aws.sh for streamlined EC2 setup.
-Schedule tests with cron or systemd timers.
+## ⚙️ CI/CD Pipeline with GitHub Actions
 
+The provided `.github/workflows/ci-cd-pipeline.yml` automates your load testing with GitHub Actions:
 
-Serve reports via a web server (e.g., Nginx) or upload to AWS S3:aws s3 cp reports/ s3://your-bucket/reports/ --recursive
+  * **Triggers:** The workflow activates on pushes and pull requests to your `main` or `master` branches.
+  * **Execution:** It builds and runs the Docker container to execute your load tests.
+  * **Artifacts:** The generated HTML test report is uploaded as a GitHub artifact.
+  * **Teams Notifications:** Test completion notifications are sent to Teams (requires the `TEAMS_WEBHOOK_URL` secret).
 
+**Important:** Remember to add `TEAMS_WEBHOOK_URL` as a secret in your GitHub repository settings to enable Teams notifications.
 
+-----
 
-Advanced AWS Options
+## 🔧 Environment Variables
 
-Deploy to AWS ECS for container orchestration.
-Use AWS CloudWatch for monitoring test metrics.
-Integrate with AWS Lambda for serverless test triggers.
+Customize your load tests using these environment variables:
 
+| Variable            | Description                                   | Default                                          |
+| :------------------ | :-------------------------------------------- | :----------------------------------------------- |
+| `GRAPHQL_ENDPOINT`  | URL of your GraphQL API endpoint              | `https://store.fur4.com/graphql`                 |
+| `MAX_VUS`           | Maximum virtual users to simulate             | `10`                                             |
+| `TEST_DURATION`     | Duration of the load test (e.g., `30s`, `2m`) | `30s`                                            |
+| `TEAMS_WEBHOOK_URL` | Microsoft Teams webhook URL for notifications | (empty, disables notifications)                  |
 
-⚙️ CI/CD Integration
-The .github/workflows/ci-cd-pipeline.yml automates the following:
+-----
 
-Triggers on pushes/pull requests to main or master.
-Builds and runs the Docker container for tests.
-Archives HTML reports as GitHub Actions artifacts.
-Sends notifications to Microsoft Teams or Slack.
-Validates test thresholds and fails the pipeline on violations.
+## 🧪 Writing Tests
 
-Setup
+  * Store all your k6 test scripts in the `tests/` folder.
+  * Refer to `customer_mutation.js` and `get_customer.js` for example test implementations.
+  * Develop your test logic in JavaScript, following the official [k6 scripting guide](https://k6.io/docs/).
 
-Add secrets in GitHub repository settings:
-TEAMS_WEBHOOK_URL: Microsoft Teams webhook.
-SLACK_WEBHOOK_URL: Slack webhook (optional).
-AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (for S3 uploads).
+-----
 
+## 📊 Reports and Logs
 
-Customize ci-cd-pipeline.yml for other CI/CD platforms (e.g., GitLab, Jenkins).
+Upon each test completion, a detailed HTML report is generated and saved in the `reports/` folder. These reports provide:
 
+  * **Success/Failure Pie Charts:** Visual summaries of test outcomes.
+  * **Detailed Metrics:** In-depth performance metrics.
+  * **GraphQL Error Details:** Specific information on any GraphQL errors encountered.
+  * **Pass/Fail Tables:** Clear tables indicating test successes and failures.
 
-🔧 Environment Variables
+These reports are ideal for sharing with stakeholders, DevOps teams, and management for easy performance visualization.
 
+-----
 
+## 📬 Notifications
 
-Variable
-Description
-Default
+When `TEAMS_WEBHOOK_URL` is configured, a concise notification will be sent to your specified Microsoft Teams channel after each test run. You can customize the content of this notification by modifying the `docker/entrypoint.sh` script.
 
+-----
 
+## 🤝 Contributions
 
-GRAPHQL_ENDPOINT
-GraphQL API endpoint URL
-https://store.fur4.com/graphql
+We welcome your feedback and contributions\! Feel free to open issues or submit pull requests.
 
+-----
 
-MAX_VUS
-Maximum virtual users to simulate
-50
+## 📄 License
 
+This project is licensed under the MIT License – see the [LICENSE](https://www.google.com/search?q=LICENSE) file for more details.
 
-TEST_DURATION
-Duration of the load test (e.g., 60s, 5m)
-60s
+-----
 
+## 🙋‍♂️ Contact
 
-THRESHOLD_RPS
-Requests-per-second threshold for pass/fail
-100
+Created by [azaworld- arifuz antor]
 
+-----
 
-TEAMS_WEBHOOK_URL
-Microsoft Teams webhook URL for notifications
-(Empty disables notifications)
-
-
-SLACK_WEBHOOK_URL
-Slack webhook URL for notifications
-(Empty disables notifications)
-
-
-REPORT_NAME
-Custom name for the HTML report file
-report_<timestamp>.html
-
-
-
-🧪 Writing and Running Tests
-Creating Tests
-
-Place k6 test scripts in the tests/ folder.
-Use customer_mutation.js and get_customer.js as templates.
-Leverage utils/graphql-client.js for reusable GraphQL request logic.
-Follow the k6 scripting guide for advanced scripting.
-
-Example Test Scenario
-import { check } from 'k6';
-import { graphql } from '../utils/graphql-client.js';
-
-export default function () {
-  const query = `
-    query GetCustomer($id: ID!) {
-      customer(id: $id) {
-        id
-        name
-      }
-    }
-  `;
-  const variables = { id: '123' };
-  const response = graphql(http.post, query, variables);
-
-  check(response, {
-    'status is 200': (r) => r.status === 200,
-    'no errors': (r) => !r.json('errors'),
-  });
-}
-
-Advanced Scenarios
-
-Stress Testing: Use stress_test.js to simulate peak loads.
-Soak Testing: Configure long-running tests to detect memory leaks.
-Spike Testing: Simulate sudden traffic spikes with dynamic VUs.
-
-
-📊 Reporting and Analytics
-
-Output: HTML reports are generated in the reports/ folder after each test run.
-Features:
-Interactive pie charts for success/failure rates.
-Time-series graphs for response times and throughput.
-Detailed tables for GraphQL errors and threshold violations.
-Exportable metrics for external analytics tools (e.g., Grafana).
-
-
-Customization: Modify utils/html-summary.js to tailor report styles or metrics.
-
-
-📬 Notifications
-
-Microsoft Teams/Slack: Configure TEAMS_WEBHOOK_URL or SLACK_WEBHOOK_URL to receive test completion alerts.
-Customization: Edit docker/entrypoint.sh to modify notification content, such as including pass/fail status or key metrics.
-Example Notification:🧪 k6 Load Test Completed
-Endpoint: https://store.fur4.com/graphql
-VUs: 50 | Duration: 60s | RPS: 120
-Status: ✅ Passed
-Report: <link-to-report>
-
-
-
-
-🔍 Monitoring and Observability
-
-Integrate with k6 Cloud for real-time test monitoring.
-Export metrics to Prometheus or InfluxDB for advanced analytics.
-Use AWS CloudWatch to track EC2 instance performance during tests.
-
-
-🤝 Contributing
-We welcome contributions! To get started:
-
-Fork the repository.
-Create a feature branch (git checkout -b feature/awesome-feature).
-Commit changes (git commit -m 'Add awesome feature').
-Push to the branch (git push origin feature/awesome-feature).
-Open a pull request.
-
-Please report bugs or suggest features via GitHub Issues.
-
-📄 License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-🙋 Contact
-Created by [azaworld - Arifuz Antor]📧 Email: arifuz@example.com🌐 GitHub: your-repo/k6-graphql-loadtesting-framework
-
-🚀 Get Started
-git clone https://github.com/your-repo/k6-graphql-loadtesting-framework.git
-cd k6-graphql-loadtesting-framework
-docker build -t k6-graphql-loadtest ./docker
-docker run --rm -e GRAPHQL_ENDPOINT=https://your-graphql-api -v $(pwd)/reports:/app/reports k6-graphql-loadtest
-
-Happy Load Testing! 🎉
+**Happy load testing\! 🚀**
